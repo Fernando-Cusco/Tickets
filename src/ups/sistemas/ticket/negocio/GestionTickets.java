@@ -51,6 +51,7 @@ public class GestionTickets {
         return isRegister;
     }
     
+    
     public Vehiculo buscarIdVehiculo(String placa){
         VehiculoDao vd = new VehiculoDao();
         Vehiculo v = vd.buscarByPlaca(placa);
