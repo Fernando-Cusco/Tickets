@@ -1,9 +1,15 @@
 package ups.sistemas.ticket.presentacion;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
+import javafx.scene.input.DataFormat;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import ups.sistemas.ticket.ON.GestionTickets;
 import ups.sistemas.ticket.EN.Ticket;
 import ups.sistemas.ticket.EN.Vehiculo;
@@ -16,6 +22,7 @@ public class TicketView extends javax.swing.JFrame {
 
     private GestionTickets gt;
     private int id;
+    private DefaultTableModel modelo;
 
     public TicketView() {
         initComponents();
@@ -30,6 +37,8 @@ public class TicketView extends javax.swing.JFrame {
         id = 0;
         nextTicket();
         actualizarHora();
+        modelo = new DefaultTableModel();
+        listarCobros();
     }
 
     @SuppressWarnings("unchecked")
@@ -69,6 +78,11 @@ public class TicketView extends javax.swing.JFrame {
         txtValor = new javax.swing.JTextField();
         btnCobrar = new javax.swing.JButton();
         btnNuevoC = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblCobros = new javax.swing.JTable();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -360,6 +374,49 @@ public class TicketView extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Cobrar", jPanel2);
 
+        tblCobros.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "N°", "Fecha", "Hora Ingreso", "Hora Salida", "Estado", "Tiempo", "Valor"
+            }
+        ));
+        jScrollPane1.setViewportView(tblCobros);
+
+        jLabel14.setText("Total:");
+
+        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel14)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        jTabbedPane1.addTab("Listas de Cobros", jPanel4);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -411,7 +468,11 @@ public class TicketView extends javax.swing.JFrame {
             Vehiculo vehiculo = gt.buscarIdVehiculo(txtPlaca.getText());
             Ticket t = new Ticket();
             t.setUnVehiculo(vehiculo);
-            t.setFecha(new Date().toString());
+            Calendar fecha = new GregorianCalendar();
+            int anio = fecha.get(Calendar.YEAR);
+            int mes = fecha.get(Calendar.MONTH);
+            int dia = fecha.get(Calendar.DAY_OF_MONTH);
+            t.setFecha(dia+"/"+mes+"/"+anio);
             Date ahora = new Date();
             SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
             t.setHoraIngreso(formateador.format(ahora));
@@ -479,6 +540,7 @@ public class TicketView extends javax.swing.JFrame {
 
             if (isPayed) {
                 JOptionPane.showMessageDialog(rootPane, "Pago realizado exitosamente");
+                listarCobros();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Ocurrio un error");
             }
@@ -531,10 +593,10 @@ public class TicketView extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TicketView().setVisible(true);
-                
+
             }
         });
-        
+
     }
 
     private void actualizarHora() {
@@ -595,6 +657,51 @@ public class TicketView extends javax.swing.JFrame {
         return isValid;
     }
 
+//    public void listarCobros() {
+//        ArrayList<Ticket> lista = gt.listaCobros(1);
+//        for (int i = 0; i < lista.size(); i++) {
+//            modelo.addRow(new Object[]{
+//                lista.get(i).getId(),
+//                lista.get(i).getFecha(),
+//                lista.get(i).getHoraIngreso(),
+//                lista.get(i).getHoraSalida(),
+//                lista.get(i).getEstado(),
+//                lista.get(i).getTiempo(),
+//                lista.get(i).getValor()});
+//        }
+//        tblCobros.setModel(modelo);
+//    }
+    public void limpiarTabla(JTable tabla) {
+        try {
+            DefaultTableModel modelos = (DefaultTableModel) tabla.getModel();
+            int filas = tabla.getRowCount();
+            for (int i = 0; filas > i; i++) {
+                modelos.removeRow(0);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+        }
+    }
+
+    public void listarCobros() {
+        limpiarTabla(tblCobros);
+        modelo = (DefaultTableModel) tblCobros.getModel();
+        ArrayList<Ticket> lista = gt.listaCobros(1);
+        Object[] fila = new Object[7];
+        for (int i = 0; i < lista.size(); i++) {
+
+            fila[0] = i;
+            fila[1] = lista.get(i).getFecha();
+            fila[2] = lista.get(i).getHoraIngreso();
+            fila[3] = lista.get(i).getHoraSalida();
+            fila[4] = lista.get(i).getEstado();
+            fila[5] = lista.get(i).getTiempo();
+            fila[6] = lista.get(i).getValor();
+
+            modelo.addRow(fila);
+        }
+        tblCobros.setModel(modelo);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -607,6 +714,7 @@ public class TicketView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -618,7 +726,11 @@ public class TicketView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblCobros;
     private javax.swing.JTextField txtHoraIngreso;
     private javax.swing.JTextField txtHoraIngresoC;
     private javax.swing.JTextField txtHoraSalidaC;

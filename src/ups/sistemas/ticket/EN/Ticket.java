@@ -14,6 +14,11 @@ public class Ticket {
     private String tiempo;
     private float valor;
 
+    public Ticket() {
+    }
+
+    
+    
     public int getId() {
         return id;
     }

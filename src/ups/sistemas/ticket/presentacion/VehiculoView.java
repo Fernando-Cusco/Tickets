@@ -107,7 +107,6 @@ public class VehiculoView extends javax.swing.JDialog {
         v.setMarca(txtMarca.getText());
         v.setPlaca(txtPlaca.getText());
         isSaved = gt.guardarVehiculo(v);
-        System.out.println("hola mundo ");
         if(isSaved){
             TicketView.txtPlaca.setText(txtPlaca.getText());
             TicketView.txtMarca.setText(txtMarca.getText());

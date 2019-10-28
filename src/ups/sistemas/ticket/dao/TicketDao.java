@@ -67,21 +67,22 @@ public class TicketDao {
     }
 
     public ArrayList<Ticket> getTicketsPagados(int estado) {
-        ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+        ArrayList<Ticket> tickets = new ArrayList<>();
         con = new Conexion();
         Statement statement = null;
         ResultSet result = null;
+        int cont =0;
         try {
-            String sql = "select vehiculo_id, fecha, hora_ingreso, hora_salida, estado, tiempo, valor from tickets where estado = 0;";
+            String sql = "select vehiculo_id, fecha, hora_ingreso, hora_salida, estado, tiempo, valor from tickets where estado ="+estado+";";
             statement = con.connect().createStatement();
             result = statement.executeQuery(sql);
             while (result.next()) {
                 Ticket t = new Ticket();
                 Vehiculo v = new Vehiculo();
-                v.setId(result.getInt(1));
+                v.setId(cont++);
                 t.setUnVehiculo(v);
-                Date d = new SimpleDateFormat("dd/MM/yyyy").parse(result.getString(2));
-                t.setFecha(d.toString());
+                //Date d = new SimpleDateFormat("dd/MM/yyyy").parse(result.getString(2));
+                t.setFecha(result.getString(2));
                 t.setHoraIngreso(result.getString(3));
                 t.setHoraSalida(result.getString(4));
                 t.setEstado(result.getInt(5));
@@ -91,9 +92,10 @@ public class TicketDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ParseException p) {
-            p.printStackTrace();
-        } finally {
+        } //catch (ParseException p) {
+            //p.printStackTrace();
+        //} 
+        finally {
             try {
                 result.close();
                 statement.close();

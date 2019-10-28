@@ -13,9 +13,9 @@ public class Conexion {
     private Connection connection = null;
     
     public Connection connect(){
-        String url = "jdbc:mysql://localhost:3306/ticket";
-        String user = "admin";
-        String pass = "admin";
+        String url = "jdbc:mysql://localhost:3306/tickets";
+        String user = "root";
+        String pass = "cuenca";
         try {
             connection = DriverManager.getConnection(url, user, pass);
         } catch (SQLException e) {

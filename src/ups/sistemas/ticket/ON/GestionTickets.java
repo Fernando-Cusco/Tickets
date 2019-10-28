@@ -1,5 +1,6 @@
 package ups.sistemas.ticket.ON;
 
+import java.util.ArrayList;
 import ups.sistemas.ticket.EN.Vehiculo;
 import ups.sistemas.ticket.EN.Ticket;
 import java.util.Calendar;
@@ -15,6 +16,7 @@ import ups.sistemas.ticket.dao.VehiculoDao;
 
 
 public class GestionTickets {
+    
     public int numeroTicketNext(){
         TicketDao td = new TicketDao();
         return td.ultimoNumero();
@@ -112,5 +114,12 @@ public class GestionTickets {
     
     public double calcularValor(int minutos){
         return minutos / 60;
-    } 
+    }
+    
+    public ArrayList listaCobros(int estado){
+        TicketDao td = new TicketDao();
+        ArrayList<Ticket> lista = td.getTicketsPagados(estado);
+        return lista;
+    }
+    
 }
