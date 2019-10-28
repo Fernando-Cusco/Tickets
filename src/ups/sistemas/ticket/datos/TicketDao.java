@@ -1,4 +1,5 @@
 package ups.sistemas.ticket.datos;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,14 +16,16 @@ import ups.sistemas.ticket.negocio.Vehiculo;
  * @author fernandocuscomejia
  */
 public class TicketDao {
+
     private Conexion con;
-    
-    public boolean insert(Ticket t){
+
+    public boolean insert(Ticket t) {
         boolean inserted = false;
         con = new Conexion();
+        PreparedStatement statement = null;
         try {
             String sql = "insert into tickets(vehiculo_id, fecha, hora_ingreso, estado) values(?, ?, ?, ?);";
-            PreparedStatement statement = con.connect().prepareStatement(sql);
+            statement = con.connect().prepareStatement(sql);
             statement.setInt(1, t.getUnVehiculo().getId());
             statement.setString(2, t.getFecha().toString());
             statement.setString(3, t.getHoraIngreso().toString());
@@ -30,32 +33,49 @@ public class TicketDao {
             inserted = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                con.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return inserted;
     }
-    
-    public boolean edit(Ticket t, int numero){
+
+    public boolean edit(Ticket t, int numero) {
         boolean edited = false;
         con = new Conexion();
+        PreparedStatement statement = null;
         try {
             String sql = "update tickets set vehiculo_id = ? where id = ?;";
-            PreparedStatement statement = con.connect().prepareStatement(sql);
+            statement = con.connect().prepareStatement(sql);
             statement.setInt(1, t.getUnVehiculo().getId());
             edited = statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                con.closeConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return edited;
     }
-    
-    public ArrayList<Ticket> getTicketsPagados(int estado){
+
+    public ArrayList<Ticket> getTicketsPagados(int estado) {
         ArrayList<Ticket> tickets = new ArrayList<Ticket>();
         con = new Conexion();
+        Statement statement = null;
+        ResultSet result = null;
         try {
             String sql = "select vehiculo_id, fecha, hora_ingreso, hora_salida, estado, tiempo, valor from tickets where estado = 0;";
-            Statement statement = con.connect().createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            while (result.next()) {                
+            statement = con.connect().createStatement();
+            result = statement.executeQuery(sql);
+            while (result.next()) {
                 Ticket t = new Ticket();
                 Vehiculo v = new Vehiculo();
                 v.setId(result.getInt(1));
@@ -71,40 +91,61 @@ public class TicketDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ParseException p){
+        } catch (ParseException p) {
             p.printStackTrace();
+        } finally {
+            try {
+                result.close();
+                statement.close();
+                con.closeConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        
+
         return tickets;
     }
-    
-    public int ultimoNumero(){
+
+    public int ultimoNumero() {
+        Statement statement = null;
+        ResultSet result = null;
         con = new Conexion();
         int numero = 0;
         try {
             String sql = "select max(id) from tickets;";
-            Statement statement = con.connect().createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            while(result.next()){
+            statement = con.connect().createStatement();
+            result = statement.executeQuery(sql);
+            while (result.next()) {
                 numero = result.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                result.close();
+                statement.close();
+                con.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         numero = numero + 1;
         return numero;
     }
-    
-    public Ticket buscarTicket(int numeroTicket){
+
+    public Ticket buscarTicket(int numeroTicket) {
         VehiculoDao vd = new VehiculoDao();
+        PreparedStatement statement = null;
+        ResultSet result = null;
         Ticket tck = new Ticket();
         con = new Conexion();
         Vehiculo v = null;
         try {
-            String sql = "select id, vehiculo_id, fecha, hora_ingreso, estado from tickets where id = "+numeroTicket+";";
-            Statement statement = con.connect().createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            while (result.next()) {                
+            String sql = "select id, vehiculo_id, fecha, hora_ingreso, estado from tickets where id = ?;";
+            statement = con.connect().prepareStatement(sql);
+            statement.setInt(1, numeroTicket);
+            result = statement.executeQuery();
+            while (result.next()) {
                 tck.setId(result.getInt(1));
                 v = vd.read(result.getInt(2));
                 tck.setUnVehiculo(v);
@@ -114,48 +155,73 @@ public class TicketDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                result.close();
+                statement.close();
+                con.closeConnection();
+            } catch (Exception e) {
+            }
         }
         return tck;
-    } 
-    
-    public boolean estadoTicketVehiculo(int idVehiculo){
+    }
+
+    public boolean estadoTicketVehiculo(int idVehiculo) {
         boolean isOpen = false;
         int est = 2;
         con = new Conexion();
+        Statement statement = null;
+        ResultSet result = null;
         try {
-            String sql = "SELECT estado FROM tickets WHERE vehiculo_id = "+idVehiculo+" and estado = 0;";
-            Statement statement = con.connect().createStatement();
-            ResultSet result = statement.executeQuery(sql);
-            while(result.next()){
+            String sql = "SELECT estado FROM tickets WHERE vehiculo_id = " + idVehiculo + " and estado = 0;";
+            statement = con.connect().createStatement();
+            result = statement.executeQuery(sql);
+            while (result.next()) {
                 est = result.getInt(1);
             }
-            if(est == 0){
+            if (est == 0) {
                 isOpen = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                result.close();
+                statement.close();
+                con.closeConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return isOpen;
     }
-    
-    public boolean pagarValorTicket(Ticket t){
+
+    public boolean pagarValorTicket(Ticket t) {
         boolean payed = false;
         con = new Conexion();
+        PreparedStatement statement = null;
         try {
             String sql = "update tickets set hora_salida = ?, estado = ?, tiempo = ?, valor = ? where id = ?";
-            PreparedStatement statement = con.connect().prepareStatement(sql);
+            statement = con.connect().prepareStatement(sql);
             statement.setString(1, t.getHoraSalida());
             statement.setInt(2, t.getEstado());
             statement.setString(3, t.getTiempo());
             statement.setFloat(4, t.getValor());
             statement.setInt(5, t.getId());
             int c = statement.executeUpdate();
-            if(c == 1){
+            if (c == 1) {
                 payed = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+                con.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return payed;
-    }   
+    }
 }
