@@ -1,4 +1,4 @@
-package ups.sistemas.ticket.datos;
+package ups.sistemas.ticket.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import ups.sistemas.ticket.negocio.Ticket;
-import ups.sistemas.ticket.negocio.Vehiculo;
+import ups.sistemas.ticket.EN.Ticket;
+import ups.sistemas.ticket.EN.Vehiculo;
 
 /**
  *

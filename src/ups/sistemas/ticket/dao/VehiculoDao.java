@@ -1,10 +1,10 @@
-package ups.sistemas.ticket.datos;
+package ups.sistemas.ticket.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import ups.sistemas.ticket.negocio.Vehiculo;
+import ups.sistemas.ticket.EN.Vehiculo;
 /**
  *
  * @author fernandocuscomejia

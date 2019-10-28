@@ -1,4 +1,4 @@
-package ups.sistemas.ticket.datos;
+package ups.sistemas.ticket.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
