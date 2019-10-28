@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
-import ups.sistemas.ticket.negocio.GestionTickets;
-import ups.sistemas.ticket.negocio.Ticket;
-import ups.sistemas.ticket.negocio.Vehiculo;
+import ups.sistemas.ticket.ON.GestionTickets;
+import ups.sistemas.ticket.EN.Ticket;
+import ups.sistemas.ticket.EN.Vehiculo;
 
 /**
  *

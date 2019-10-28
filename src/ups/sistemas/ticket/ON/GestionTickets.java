@@ -1,9 +1,11 @@
-package ups.sistemas.ticket.negocio;
+package ups.sistemas.ticket.ON;
 
+import ups.sistemas.ticket.EN.Vehiculo;
+import ups.sistemas.ticket.EN.Ticket;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import ups.sistemas.ticket.datos.TicketDao;
-import ups.sistemas.ticket.datos.VehiculoDao;
+import ups.sistemas.ticket.dao.TicketDao;
+import ups.sistemas.ticket.dao.VehiculoDao;
 
 /**
  *

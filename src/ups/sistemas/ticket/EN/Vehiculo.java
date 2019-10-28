@@ -1,4 +1,4 @@
-package ups.sistemas.ticket.negocio;
+package ups.sistemas.ticket.EN;
 
 /**
  *

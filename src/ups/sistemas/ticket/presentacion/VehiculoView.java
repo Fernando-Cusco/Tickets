@@ -1,8 +1,8 @@
 package ups.sistemas.ticket.presentacion;
 
 import javax.swing.JOptionPane;
-import ups.sistemas.ticket.negocio.GestionTickets;
-import ups.sistemas.ticket.negocio.Vehiculo;
+import ups.sistemas.ticket.ON.GestionTickets;
+import ups.sistemas.ticket.EN.Vehiculo;
 
 /**
  *
@@ -107,6 +107,7 @@ public class VehiculoView extends javax.swing.JDialog {
         v.setMarca(txtMarca.getText());
         v.setPlaca(txtPlaca.getText());
         isSaved = gt.guardarVehiculo(v);
+        System.out.println("hola mundo ");
         if(isSaved){
             TicketView.txtPlaca.setText(txtPlaca.getText());
             TicketView.txtMarca.setText(txtMarca.getText());
